@@ -29,8 +29,8 @@ npm run preview
 - **底部时间轴**：在「现在 14:20」「今天 10:00」「典型周二 14:20」之间切换，会议室亮起、工位点位和顶部五项状态会一起变化。
 - **左下角楼栋剖面**（10F–15F，12F 高亮）：点击后提示「换层后续再做」，不会真正换层。
 - 可轻微拖拽平移或滚轮缩放，主交互仍是点选飞入。
-- 场景里的人只是匿名色块，不显示姓名或可追踪 ID。
+- 场景里的人是匿名低多边形模型，不显示姓名或可追踪 ID。
 
 ## 技术
 
-Vite + React + TypeScript + Three.js（WebGLRenderer，经 @react-three/fiber）。资产已打包，运行时不依赖外部 CDN。
+Vite + React + TypeScript + Three.js（WebGLRenderer，经 @react-three/fiber）。资产已打包，运行时不依赖外部 CDN。第一批家具、人和电梯轿厢在 `public/models/`（16 个 `.glb`），约定见 `MODEL_BRIEF.md`。`screenshots/` 是当前场景截图。

@@ -17,10 +17,11 @@ export function FloorPlate() {
       const hole = new THREE.Path()
       const hx = sh.w / 2
       const hz = sh.d / 2
-      hole.moveTo(sh.x - hx, sh.z - hz)
-      hole.lineTo(sh.x + hx, sh.z - hz)
-      hole.lineTo(sh.x + hx, sh.z + hz)
-      hole.lineTo(sh.x - hx, sh.z + hz)
+      // Shape is XY; rotateX(-PI/2) maps y -> -z, so feed -sh.z to keep holes at +Z north.
+      hole.moveTo(sh.x - hx, -(sh.z - hz))
+      hole.lineTo(sh.x + hx, -(sh.z - hz))
+      hole.lineTo(sh.x + hx, -(sh.z + hz))
+      hole.lineTo(sh.x - hx, -(sh.z + hz))
       hole.closePath()
       shape.holes.push(hole)
     }

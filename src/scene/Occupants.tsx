@@ -70,11 +70,9 @@ const SEAT_OFFSETS: Record<string, Array<[number, number, number]>> = {
   ],
   b1: [[0, 0.35, Math.PI]],
   b2: [[0, 0.35, Math.PI]],
-  f1: [[0.15, 0.35, 0]],
-  f2: [[0.15, 0.35, 0]],
+  f1: [[0.15, 0.18, Math.PI]],
+  f2: [[0.15, 0.18, Math.PI]],
   pantry: [
-    [-0.6, -1.85, 0],
-    [0.15, -1.85, 0],
     [-1.6, 1.95, Math.PI],
   ],
 }

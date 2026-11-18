@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { Scenario } from '../types'
@@ -37,7 +38,7 @@ export function Experience({
       gl={{
         antialias: true,
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 0.92,
+        toneMappingExposure: 0.98,
         outputColorSpace: THREE.SRGBColorSpace,
         powerPreference: 'high-performance',
         alpha: false,
@@ -52,10 +53,12 @@ export function Experience({
       <Lights />
       <CameraRig selected={selected} />
       <Picker onSelect={onSelect} onBackground={onBackground} onSection={onSection} />
-      <FloorPlate />
-      <Rooms statusOf={statusOf} screenOn={screenOn} />
-      <Elevators />
-      <Occupants scenario={scenario} />
+      <Suspense fallback={null}>
+        <FloorPlate />
+        <Rooms statusOf={statusOf} screenOn={screenOn} />
+        <Elevators />
+        <Occupants scenario={scenario} />
+      </Suspense>
     </Canvas>
   )
 }

@@ -9,10 +9,10 @@ export function Lights() {
 
   useLayoutEffect(() => {
     gl.toneMapping = THREE.ACESFilmicToneMapping
-    gl.toneMappingExposure = 0.92
+    gl.toneMappingExposure = 0.98
     gl.outputColorSpace = THREE.SRGBColorSpace
     gl.shadowMap.enabled = true
-    gl.shadowMap.type = THREE.PCFShadowMap
+    gl.shadowMap.type = THREE.PCFSoftShadowMap
     const tex = applyStudioEnvironment(gl, scene, 0.32)
     return () => {
       if (scene.environment === tex) scene.environment = null
@@ -29,7 +29,7 @@ export function Lights() {
       {/* key — soft NE sun through the windows */}
       <directionalLight
         position={[22, 30, 16]}
-        intensity={1.25}
+        intensity={1.35}
         color="#fff3e0"
         castShadow
         shadow-mapSize-width={2048}
@@ -52,9 +52,9 @@ export function Lights() {
       <directionalLight position={[30, 8, 2]} intensity={0.2} color="#dfeaf5" />
       <ContactShadows
         position={[0, 0.002, 0]}
-        opacity={0.42}
+        opacity={0.48}
         scale={52}
-        blur={2.0}
+        blur={2.4}
         far={9}
         color="#4a433c"
       />

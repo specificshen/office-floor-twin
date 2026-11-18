@@ -86,15 +86,17 @@ function RoomShell({ room, status }: { room: RoomDef; status: RoomStatus }) {
 
   return (
     <group>
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, floorY, 0]}
-        receiveShadow
-        userData={{ roomId: room.id }}
-      >
-        <planeGeometry args={[w - 0.08, d - 0.08]} />
-        <primitive object={carpetMaterial(kind)} attach="material" />
-      </mesh>
+      {kind !== 'core' && (
+        <mesh
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, floorY, 0]}
+          receiveShadow
+          userData={{ roomId: room.id }}
+        >
+          <planeGeometry args={[w - 0.08, d - 0.08]} />
+          <primitive object={carpetMaterial(kind)} attach="material" />
+        </mesh>
+      )}
 
       {kind !== 'desks' && kind !== 'core' && (
         <Walls
@@ -108,18 +110,24 @@ function RoomShell({ room, status }: { room: RoomDef; status: RoomStatus }) {
       )}
 
       {(status === 'busy' || status === 'soon') && kind !== 'desks' && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} userData={{ kind: 'ignore' }}>
-          <planeGeometry args={[Math.max(0.6, w - 0.3), Math.max(0.6, d - 0.3)]} />
-          <primitive object={status === 'busy' ? m.glowBusy : m.glowSoon} attach="material" />
-        </mesh>
+        <>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.028, 0]} userData={{ kind: 'ignore' }}>
+            <planeGeometry args={[Math.max(0.6, w - 0.22), Math.max(0.6, d - 0.22)]} />
+            <primitive object={status === 'busy' ? m.glowBusy : m.glowSoon} attach="material" />
+          </mesh>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 3.05, 0]} userData={{ kind: 'ignore' }}>
+            <planeGeometry args={[Math.max(0.8, w - 0.45), Math.max(0.8, d - 0.45)]} />
+            <primitive object={status === 'busy' ? m.glowBusyCeil : m.glowSoonCeil} attach="material" />
+          </mesh>
+        </>
       )}
 
       {(status === 'busy' || status === 'soon') && kind !== 'desks' && kind !== 'core' && (
         <pointLight
-          position={[0, 2.3, 0]}
-          color={status === 'busy' ? '#ffc27a' : '#ffe09a'}
-          intensity={status === 'busy' ? 3.2 : 1.6}
-          distance={Math.max(w, d) * 1.35}
+          position={[0, 2.15, 0]}
+          color={status === 'busy' ? '#ffb56a' : '#ffe09a'}
+          intensity={status === 'busy' ? 5.2 : 2.4}
+          distance={Math.max(w, d) * 1.5}
           decay={2}
         />
       )}
@@ -241,8 +249,12 @@ function SolidWall({
         <boxGeometry args={[length, height, thickness]} />
         <primitive object={booth ? m.wallSage : m.wall} attach="material" />
       </mesh>
+      <mesh position={[0, -height / 2 + 0.05, 0]} receiveShadow>
+        <boxGeometry args={[length, 0.1, thickness + 0.02]} />
+        <primitive object={m.frame} attach="material" />
+      </mesh>
       <mesh position={[0, height / 2 - 0.03, 0]}>
-        <boxGeometry args={[length, 0.04, thickness + 0.015]} />
+        <boxGeometry args={[length, 0.04, thickness + 0.02]} />
         <primitive object={m.frame} attach="material" />
       </mesh>
     </group>
@@ -296,6 +308,18 @@ function DoorWall({
           <primitive object={m.frame} attach="material" />
         </mesh>
       ))}
+      <mesh position={[0, height / 2 - 0.03, 0]}>
+        <boxGeometry args={[length, 0.04, thickness + 0.02]} />
+        <primitive object={m.frame} attach="material" />
+      </mesh>
+      <mesh position={[-(DOOR_W / 2 + side / 2), -height / 2 + 0.05, 0]}>
+        <boxGeometry args={[side, 0.1, thickness + 0.02]} />
+        <primitive object={m.frame} attach="material" />
+      </mesh>
+      <mesh position={[DOOR_W / 2 + side / 2, -height / 2 + 0.05, 0]}>
+        <boxGeometry args={[side, 0.1, thickness + 0.02]} />
+        <primitive object={m.frame} attach="material" />
+      </mesh>
     </group>
   )
 }
@@ -344,7 +368,7 @@ function SmallMeeting({ screenOn }: { screenOn: boolean }) {
       <MeetChair position={[0.3, 0, -0.72]} color="gray" />
       <MeetChair position={[-0.3, 0, -0.72]} color="gray" />
       <WallScreen position={[-4.15, 1.45, 0]} rotation={[0, Math.PI / 2, 0]} width={1.4} height={0.8} on={screenOn} />
-      <DeskPlant position={[0.9, 0.75, 0.2]} />
+      <DeskPlant position={[0.9, 0.74, 0.2]} />
       <FloorPlant position={[3.5, 0, 1.4]} scale={0.85} />
     </group>
   )
@@ -361,7 +385,7 @@ function MediumMeeting({ screenOn }: { screenOn: boolean }) {
         </group>
       ))}
       <WallScreen position={[-4.15, 1.55, 0]} rotation={[0, Math.PI / 2, 0]} width={2.0} height={1.1} on={screenOn} />
-      <Credenza position={[-1.2, 0, 2.25]} width={1.6} />
+      <Credenza position={[-1.2, 0, 2.05]} rotation={[0, Math.PI, 0]} width={1.6} />
       <FloorPlant position={[3.55, 0, 2.1]} variant={1} scale={0.9} />
     </group>
   )
@@ -381,7 +405,7 @@ function LargeMeeting({ screenOn }: { screenOn: boolean }) {
       <MeetChair position={[-2.55, 0, 0]} rotation={[0, Math.PI / 2, 0]} color="ink" />
       <MeetChair position={[2.55, 0, 0]} rotation={[0, -Math.PI / 2, 0]} color="ink" />
       <WallScreen position={[-4.5, 1.65, 0]} rotation={[0, Math.PI / 2, 0]} width={2.6} height={1.35} on={screenOn} />
-      <Credenza position={[0, 0, 4.1]} width={2.4} />
+      <Credenza position={[0, 0, 4.1]} rotation={[0, Math.PI, 0]} width={2.4} />
       <FloorPlant position={[3.8, 0, 3.7]} variant={2} />
       <FloorPlant position={[3.8, 0, -3.7]} variant={3} />
     </group>
@@ -421,8 +445,8 @@ function Booth({ screenOn }: { screenOn: boolean }) {
 function FocusRoom() {
   return (
     <group>
-      <Desk position={[0.15, 0, -0.4]} rotation={[0, Math.PI, 0]} hasMonitor lamp plant />
-      <TaskChair position={[0.15, 0, 0.35]} color="sage" />
+      <Desk position={[0.15, 0, -0.4]} hasMonitor lamp plant />
+      <TaskChair position={[0.15, 0, 0.18]} rotation={[0, Math.PI, 0]} color="sage" />
       <FloorPlant position={[-1.35, 0, -2.6]} scale={0.85} variant={2} />
     </group>
   )
@@ -493,7 +517,7 @@ function NorthDesks() {
       {NORTH_SPOTS.map((s, i) => (
         <group key={s.id} position={s.pos} rotation={[0, s.rot, 0]}>
           <Desk hasMonitor dual={i % 5 === 0} plant={i % 4 === 1} lamp={i % 6 === 2} />
-          <TaskChair position={[0, 0, 0.72]} color={i % 3 === 0 ? 'blue' : i % 3 === 1 ? 'gray' : 'sage'} />
+          <TaskChair position={[0, 0, 0.58]} rotation={[0, Math.PI, 0]} color={i % 3 === 0 ? 'blue' : i % 3 === 1 ? 'gray' : 'sage'} />
         </group>
       ))}
     </group>
@@ -506,7 +530,7 @@ function EastDesks() {
       {EAST_SPOTS.map((s, i) => (
         <group key={s.id} position={s.pos} rotation={[0, s.rot, 0]}>
           <Desk hasMonitor dual={i % 6 === 0} plant={i % 5 === 2} lamp={i % 7 === 1} />
-          <TaskChair position={[0, 0, 0.72]} color={i % 3 === 0 ? 'blue' : i % 3 === 1 ? 'gray' : 'sand'} />
+          <TaskChair position={[0, 0, 0.58]} rotation={[0, Math.PI, 0]} color={i % 3 === 0 ? 'blue' : i % 3 === 1 ? 'gray' : 'sand'} />
         </group>
       ))}
     </group>
